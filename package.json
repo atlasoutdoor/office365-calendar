@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/toowhite/leaders-calendar#readme",
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-remove-code": "^1.0.2"
   }
 }
