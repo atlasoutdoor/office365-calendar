@@ -1,17 +1,18 @@
 <!--removeIf(production)-->
 <html>
+
 <head>
-<!--endRemoveIf(production)-->
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.css' />
+    <!--endRemoveIf(production)-->
+    <link rel='stylesheet' href='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/fullcalendar.css' />
     <style>
         .fc-content>span {
             white-space: normal;
         }
     </style>
-    <script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/ical.js/1.2.2/ical.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.js'></script>
+    <script src='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/jquery-3.2.1.min.js'></script>
+    <script src='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/moment.min.js'></script>
+    <script src='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/ical.js'></script>
+    <script src='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/fullcalendar.js'></script>
     <script>
         var calendarMap = {
             "xxz": "http://www.intl.zju.edu.cn/leaders/calendar?url=/owa/calendar/c3c4a18c669c4bac927a3316f4694913@intl.zju.edu.cn/b8616d3b733e45379400d2bc55fbb17217783638834842080893/calendar.ics",
@@ -43,7 +44,8 @@
                                     "title": item.getFirstPropertyValue("summary") + ";",
                                     "start": item.getFirstPropertyValue("dtstart").toJSDate(),
                                     "end": item.getFirstPropertyValue("dtend").toJSDate(),
-                                    "location": item.getFirstPropertyValue("location")
+                                    "location": item.getFirstPropertyValue("location"),
+                                    "allDay": item.getFirstPropertyValue("x-microsoft-cdo-alldayevent") == "TRUE"
                                 };
                             }
                         });
@@ -55,10 +57,19 @@
                             timeFormat: "H:mm",
                             displayEventEnd: true,
                             eventRender: function (event, element) {
-                                // console.log(element);
                                 // append location
                                 if (event.location != null && event.location != "") {
-                                    element.append("<span>" + event.location + "</span>");
+                                    // element.append("<span>" + event.location + "</span>");
+                                    element.append("<td class='fc-widget-content'>" + event.location + "</td>");
+                                }
+                                else {
+                                    element.append("<td class='fc-widget-content'></td>");
+                                }
+                            },
+                            viewRender: function (view, element) {
+                                // console.log(view);
+                                if (view.type == "listDay") {
+                                    $(".fc-widget-header", element).attr("colspan", 4);
                                 }
                             },
                             header: {
@@ -72,16 +83,17 @@
             });
         });
     </script>
-<!--removeIf(production)-->
+    <!--removeIf(production)-->
 </head>
+
 <body>
-<!--endRemoveIf(production)-->
+    <!--endRemoveIf(production)-->
     <span>请选择领导干部</span>
     <select id="leaderSelect">
         <option value="" disabled selected style="display: none;">请选择领导</option>
         <option value="fq">傅强</option>
         <option value="zgy">诸葛洋</option>
-        <option value="xxz">徐晓忠</option>        
+        <option value="xxz">徐晓忠</option>
         <option value="jxq">江肖强</option>
     </select>
     <br />
@@ -89,5 +101,6 @@
     <div id='calendar'></div>
 </body>
 <!--removeIf(production)-->
+
 </html>
 <!--endRemoveIf(production)-->
