@@ -66,6 +66,10 @@
                                 };
                             }
                         });
+                        
+                        // if displayed on small screen, use list view
+                        // console.log(window.screen.width);
+                        var defaultView = window.screen.width >= 800 ? "month" : "list";
 
                         // refresh the control
                         calendarCtrl.fullCalendar('destroy');
@@ -73,6 +77,7 @@
                             events: events,
                             height: "auto",
                             timeFormat: "H:mm",
+                            defaultView: defaultView,
                             displayEventEnd: true,
                             eventRender: function (event, element) {
                                 // append location
