@@ -1,0 +1,115 @@
+<!--removeIf(production)-->
+<html>
+
+<head>
+    <!--endRemoveIf(production)-->
+    <link rel='stylesheet' href='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/fullcalendar.css' />
+    <link rel='stylesheet' href='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/jquery.loading.min.css' />
+
+    <style>
+        .fc-content>span {
+            white-space: normal;
+        }
+    </style>
+    <script src='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/jquery-3.2.1.min.js'></script>
+    <script src='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/moment.min.js'></script>
+    <script src='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/ical.js'></script>
+    <script src='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/fullcalendar.js'></script>
+    <script src='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/jquery.loading.min.js'></script>
+
+    <script>
+        var calendarMap = {
+            "zhb": "http://www.intl.zju.edu.cn/leaders/calendar?url=/owa/calendar/4962aa1217014d7882d1abb5885c6296@intl.zju.edu.cn/8d67770e8c594a6ba2d8746f50b72d4e1809389726044603152/calendar.ics",
+        };
+        
+        $(document).ready(function () {
+            
+            var calendarCtrl = $('#calendar');
+            calendarCtrl.fullCalendar({});
+
+            $(document).on("change", "#deptSelect", function (event) {
+                var deptSelect = $(this);
+                var calendarUrl = calendarMap[deptSelect.val()];
+                calendarCtrl.loading("start");
+                $.get(calendarUrl)
+                    .then(function (data) {
+                        calendarCtrl.loading("stop");
+                        // parse the ics data
+                        var jcalData = ICAL.parse(data.trim());
+                        var comp = new ICAL.Component(jcalData);
+                        var eventComps = comp.getAllSubcomponents("vevent");
+                        // console.log(JSON.stringify(eventComps));
+                        // map them to FullCalendar events
+                        var events = $.map(eventComps, function (item) {
+                            if (item.getFirstPropertyValue("class") == "PRIVATE") {
+                                return null;
+                            }
+                            else {
+                                return {
+                                    "title": item.getFirstPropertyValue("summary") + ";",
+                                    "start": item.getFirstPropertyValue("dtstart").toJSDate(),
+                                    "end": item.getFirstPropertyValue("dtend").toJSDate(),
+                                    "location": item.getFirstPropertyValue("location"),
+                                    "allDay": item.getFirstPropertyValue("x-microsoft-cdo-alldayevent") == "TRUE"
+                                };
+                            }
+                        });
+                        
+                        // if displayed on small screen, use list view
+                        // console.log(window.screen.width);
+                        var defaultView = window.screen.width >= 800 ? "month" : "list";
+
+                        // refresh the control
+                        calendarCtrl.fullCalendar('destroy');
+                        calendarCtrl.fullCalendar({
+                            events: events,
+                            height: "auto",
+                            timeFormat: "H:mm",
+                            defaultView: defaultView,
+                            displayEventEnd: true,
+                            eventRender: function (event, element) {
+                                // append location
+                                if (event.location != null && event.location != "") {
+                                    // element.append("<span>" + event.location + "</span>");
+                                    element.append("<td class='fc-widget-content'>" + event.location + "</td>");
+                                }
+                                else {
+                                    element.append("<td class='fc-widget-content'></td>");
+                                }
+                            },
+                            viewRender: function (view, element) {
+                                // console.log(view);
+                                if (view.type == "listDay") {
+                                    $(".fc-widget-header", element).attr("colspan", 4);
+                                }
+                            },
+                            header: {
+                                left: 'title',
+                                center: '',
+                                right: 'today,month,basicWeek,listDay prev,next'
+                            }
+                        });
+
+                    });
+            });
+            
+            $("#deptSelect").val("zhb").trigger("change");
+        });
+    </script>
+    <!--removeIf(production)-->
+</head>
+
+<body>
+    <!--endRemoveIf(production)-->
+    <span>请选择接待单位</span>
+    <select id="deptSelect">
+        <!-- option value="" disabled selected style="display: none;">接待单位</option -->
+        <option value="zhb">综合办公室</option>
+    </select>
+    <br />
+    <br />
+    <div id='calendar'></div>
+<!--removeIf(production)-->
+</body>
+</html>
+<!--endRemoveIf(production)-->
