@@ -10,6 +10,9 @@
         .fc-content>span {
             white-space: normal;
         }
+        .fc-widget-content{
+            text-align: left!important;
+        }
     </style>
     <script src='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/jquery-3.2.1.min.js'></script>
     <script src='http://www.intl.zju.edu.cn/sites/default/files/leaders-calendar/moment.min.js'></script>
@@ -57,7 +60,7 @@
                         
                         // if displayed on small screen, use list view
                         // console.log(window.screen.width);
-                        var defaultView = window.screen.width >= 800 ? "month" : "list";
+                        var defaultView = "listWeek";
 
                         // refresh the control
                         calendarCtrl.fullCalendar('destroy');
@@ -86,7 +89,7 @@
                             header: {
                                 left: 'title',
                                 center: '',
-                                right: 'today,month,basicWeek,listDay prev,next'
+                                right: 'today,month,basicWeek,listWeek prev,next'
                             }
                         });
 
