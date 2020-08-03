@@ -17,10 +17,11 @@
   },
   "homepage": "https://github.com/toowhite/leaders-calendar#readme",
   "devDependencies": {
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-remove-code": "^1.0.2"
   },
   "dependencies": {
+    "http-server": "^0.12.3",
     "natives": "^1.1.6"
   }
 }
